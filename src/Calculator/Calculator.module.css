@@ -1,0 +1,5 @@
+.body {
+    width: 320px;
+    background-color: var(--body-color);
+    padding: 50px 15px 15px 15px;
+}
