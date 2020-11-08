@@ -23,6 +23,8 @@
 
 .btn.large {
     width: 130px;
+    text-align: left;
+    padding-left: 23px;
 }
 
 .btn.color {

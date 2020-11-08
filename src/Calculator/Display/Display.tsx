@@ -3,17 +3,13 @@ import s from "./Display.module.css";
 
 type PropsType = {
     display: string
-    calculate: string
 }
 
-const Display: React.FC<PropsType> = ({display, calculate}) => {
-
-    let fontSize = s.middle
+const Display: React.FC<PropsType> = ({display}) => {
 
     return (
-        <div className={`${s.display} ${display.length > 7 && fontSize}`}>
+        <div className={`${s.display}`}>
             {display}
-            <div className={s.calculate}>{calculate}</div>
         </div>
     )
 }
