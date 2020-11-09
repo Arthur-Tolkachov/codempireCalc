@@ -1,4 +1,5 @@
 import {
+    CLEAR_MEMORY,
     RESET_RESULT,
     SET_DOT,
     SET_EQUALS,
@@ -43,3 +44,6 @@ export const setValueToMemory = (value: string): setValueToMemoryType => ({type:
 
 export type setValueFromMemoryType = { type: typeof SET_VALUE_FROM_MEMORY }
 export const setValueFromMemory = (): setValueFromMemoryType => ({type: SET_VALUE_FROM_MEMORY})
+
+export type clearMemoryType = { type: typeof CLEAR_MEMORY }
+export const clearMemory = (): clearMemoryType => ({type: CLEAR_MEMORY})

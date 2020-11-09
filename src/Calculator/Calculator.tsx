@@ -4,6 +4,7 @@ import Display from "./Display/Display";
 import Controls from "./Controls/Controls";
 import { calcReducer, initialState } from "./state/calcReducer";
 import {
+    clearMemory,
     resetResult,
     setDot,
     setEquals,
@@ -54,6 +55,8 @@ const Calculator = () => {
                     dispatch(setValueToMemory("-"))
                 } else if(value === "mr") {
                     dispatch(setValueFromMemory())
+                } else if(value === "mc") {
+                    dispatch(clearMemory())
                 }
             }
         }

@@ -1,4 +1,5 @@
 import {
+    clearMemoryType,
     resetResultType,
     setDotType,
     setEqualsType,
@@ -11,6 +12,7 @@ import {
     setValueToMemoryType
 } from "./actions";
 import {
+    CLEAR_MEMORY,
     RESET_RESULT,
     SET_DOT,
     SET_EQUALS,
@@ -40,6 +42,7 @@ type ActionType =
     | setPlusMinusType
     | setValueToMemoryType
     | setValueFromMemoryType
+    | clearMemoryType
 
 export const initialState: StateType = {
     leftOperand: "0",
@@ -54,9 +57,9 @@ export const calcReducer = (state = initialState, action: ActionType) => {
     switch (action.type) {
         case SET_RESULT: {
             if (action.a && action.b && action.o) {
-                let b:string = ""
-                let o:string = ""
-                if(+action.b < 0 && action.o === "-") {
+                let b: string = ""
+                let o: string = ""
+                if (+action.b < 0 && action.o === "-") {
                     b = `${+action.b - +action.b * 2}`
                     o = "+"
                 } else {
@@ -90,9 +93,9 @@ export const calcReducer = (state = initialState, action: ActionType) => {
             return {...state, operator: action.value, dot: false}
         }
         case SET_EQUALS: {
-            let b:string = ""
-            let o:string = ""
-            if(+action.b < 0 && action.o === "-") {
+            let b: string = ""
+            let o: string = ""
+            if (+action.b < 0 && action.o === "-") {
                 b = `${+action.b - +action.b * 2}`
                 o = "+"
             } else {
@@ -131,7 +134,7 @@ export const calcReducer = (state = initialState, action: ActionType) => {
         }
 
         case SET_VALUE_TO_MEMORY: {
-            if(action.value === "+") {
+            if (action.value === "+") {
                 let value = +state.result > 0 ? state.result : `${+state.result - +state.result * 2}`
                 return {...state, memory: value}
             } else {
@@ -142,7 +145,13 @@ export const calcReducer = (state = initialState, action: ActionType) => {
 
         case SET_VALUE_FROM_MEMORY: {
             let dot = state.memory.includes(".")
-            return {...state, result: state.memory, leftOperand: state.memory, rightOperand: "", dot: dot}
+            if(state.memory) {
+                return {...state, result: state.memory, leftOperand: state.memory, rightOperand: "", dot: dot}
+            } return state
+        }
+
+        case CLEAR_MEMORY : {
+            return {...state, memory: ""}
         }
 
         default:
