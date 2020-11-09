@@ -6,7 +6,7 @@ import {v1} from "uuid";
 const buttons: BtnType[] = [
     {id: v1(), value: "AC", size: "small", bgColor: "light", type: "func"},
     {id: v1(), value: "+/-", size: "small", bgColor: "light", type: "func"},
-    {id: v1(), value: "%", size: "small", bgColor: "light", type: "func"},
+    {id: v1(), value: "%", size: "small", bgColor: "light", type: "operator"},
     {id: v1(), value: "/", size: "small", bgColor: "color", type: "operator"},
     {id: v1(), value: "mc", size: "small", bgColor: "dark", type: "func"},
     {id: v1(), value: "mr", size: "small", bgColor: "dark", type: "func"},

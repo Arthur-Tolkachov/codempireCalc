@@ -4,34 +4,40 @@ import Display from "./Display/Display";
 import Controls from "./Controls/Controls";
 
 
-let leftOperand:string = "0"  //переменная хранит первый операнд
-let rightOperand:string = ""  //переменная хранит второй операнд
-let operator:string = "" //переменная хранит оператор
+let leftOperand: string = "0"
+let rightOperand: string = ""
+let operator: string = ""
 
 const Calculator = () => {
-    const [result, setResult] = useState<string>("0") //состояние выводится на экран
+    const [result, setResult] = useState<string>("0")
+    const [memory, setMemory] = useState<string>("")
 
-    //функция выполняет операцию
+    const calculationHelper = (operator:string, leftOperand:string, rightOperand:string) => Function('return ' + leftOperand + operator + rightOperand)()
     const calculate = () => {
-        let equals = eval(leftOperand + operator + rightOperand) //записывает результат операции
-        leftOperand = equals //присваиваем первому операнду результат вычислений
-        rightOperand = "" //обнуляем второй операнд
-        setResult(equals) //сетаем результат вычисления
+        let equals: string = ""
+        equals = operator === "%" ? `${+rightOperand * +leftOperand / 100}` : calculationHelper(operator, leftOperand, rightOperand)
+        rightOperand = ""
+        //@ts-ignore
+        if(equals !== Infinity) {
+            leftOperand = `${equals}`
+            return equals
+        }
+        leftOperand = "0"
+        return "0"
     }
 
-    //функция добавляет точку
+
     const addDot = () => {
-        //определяем с каким оператором работаем (левый или правый)
-        if(operator) {
-            rightOperand = !rightOperand.includes(".") //проверка на наличие "." чтобы не поставить больше одной
+        if (operator) {
+            rightOperand = !rightOperand.includes(".")
                 ? rightOperand + "."
                 : rightOperand
 
-            rightOperand = rightOperand[0] === "." // если в пустое значение добавляем "." то ставим "0" перед ней
+            rightOperand = rightOperand[0] === "."
                 ? "0" + rightOperand
                 : rightOperand
 
-            setResult(rightOperand) // сетаем результат вычисления
+            setResult(rightOperand)
         } else {
             leftOperand = !leftOperand.includes(".")
                 ? leftOperand + "."
@@ -44,35 +50,88 @@ const Calculator = () => {
         }
     }
 
-    //хендлер нажатия кнопок
-    const handler = (value: string, type: string) => {
-        //проверка на какую кнопку нажали (цифра, операция, функция)
-        switch (type) {
-            case "digit": { // если цифра
-                if(operator) { //если небыло операции то сетаем значение в левый операнд
-                    rightOperand += value
-                    setResult(rightOperand)
-                } else { //если небыло операции то сетаем значение в правый операнд
-                    leftOperand === "0" ? leftOperand = value : leftOperand += value //если состояние содержит "0" то перезаписываем
-                    setResult(leftOperand)
+    const enterDigit = (value: string) => {
+        if (operator) {
+            rightOperand += value
+            setResult(rightOperand)
+        } else {
+            leftOperand === "0" ? leftOperand = value : leftOperand += value
+            setResult(leftOperand)
+        }
+    }
+
+    const enterOperator = (value: string) => {
+        leftOperand && rightOperand && operator
+            ? setResult(calculate())
+            : leftOperand = result
+        operator = value
+    }
+
+    const enterFunc = (value: string) => {
+        switch(value) {
+            case "=": {
+                if(leftOperand && rightOperand && operator) {
+                    setResult(calculate())
+                    operator = ""
+                    leftOperand = ""
                 }
                 break
             }
-            case "operator": { // если оператор
-                if(leftOperand && rightOperand && operator) { //если все переменные заполнены то запускаем расчет
-                    calculate()
-                    operator = value // после расчета записываем новый оператор
+            case ",": {
+                addDot()
+                break
+            }
+            case "AC": {
+                leftOperand = "0"
+                rightOperand = ""
+                operator = ""
+                setResult("0")
+                break
+            }
+            case "+/-": {
+                setResult(`${-result}`)
+                if (operator) {
+                    rightOperand = `${-rightOperand}`
                 } else {
-                    operator = value // записываем оператор
+                    leftOperand = `${-leftOperand}`
                 }
                 break
             }
-            case "func":  { // если функциональная кнопка в.т.ч. "="
-                if(value === "=" && leftOperand && rightOperand && operator) { //если "=" то сччитаем
-                    calculate()
-                } else if (value === ",") { //если "." вызываем функцию с "."
-                    addDot()
+            case "m+": {
+                setMemory(result)
+                break
+            }
+            case "m-": {
+                setMemory(`${-result}`)
+                break
+            }
+            case "mr": {
+                memory && setResult(memory)
+                if (operator) {
+                    rightOperand = memory
+                } else {
+                    leftOperand = memory
                 }
+                break
+            }
+            case "mc": {
+                setMemory("")
+            }
+        }
+    }
+
+    const handler = (value: string, type: string) => {
+        switch (type) {
+            case "digit": {
+                enterDigit(value)
+                break
+            }
+            case "operator": {
+                enterOperator(value)
+                break
+            }
+            case "func": {
+                enterFunc(value)
             }
         }
     }
