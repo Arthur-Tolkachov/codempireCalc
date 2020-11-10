@@ -1,15 +1,22 @@
 .display {
     color: #fff;
-    display: flex;
-    flex-direction: column;
+    display: block;
     width: 100%;
     height: 120px;
-    align-items:  flex-end;
     font-size: 80px;
     overflow: hidden;
+    overflow-y: auto;
     position: relative;
+    text-align: right;
+    word-wrap: break-word;
 }
-
+.display::-webkit-scrollbar {
+    width: 2px;
+    background-color: #111;
+}
+.display::-webkit-scrollbar-thumb {
+    background-color: #ff9a0a;
+}
 .calculate {
     position: absolute;
     bottom: 0;
